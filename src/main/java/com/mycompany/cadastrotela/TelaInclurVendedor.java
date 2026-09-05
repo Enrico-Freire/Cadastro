@@ -3,14 +3,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.cadastrotela;
+
 import com.mycompany.cadastrotela.Vendedor;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.*;
+
 /**
  *
  * @author IFSP
  */
 public class TelaInclurVendedor extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaInclurVendedor.class.getName());
 
     /**
@@ -18,95 +22,110 @@ public class TelaInclurVendedor extends javax.swing.JFrame {
      */
     public TelaInclurVendedor() {
         initComponents();
-        
+
         Cpfvendedor.addKeyListener(new java.awt.event.KeyAdapter() {
-    @Override
-    public void keyReleased(java.awt.event.KeyEvent evt) {
-        String cpf = Cpfvendedor.getText().replaceAll("[^0-9]", ""); // remove tudo que não for número
-        
-        if (cpf.length() > 11) {
-            cpf = cpf.substring(0, 11); // limita a 11 dígitos
-        }
-        
-        StringBuilder cpfFormatado = new StringBuilder();
-        
-        for (int i = 0; i < cpf.length(); i++) {
-            if (i == 3 || i == 6) {
-                cpfFormatado.append(".");
-            } else if (i == 9) {
-                cpfFormatado.append("-");
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                String cpf = Cpfvendedor.getText().replaceAll("[^0-9]", ""); // remove tudo que não for número
+
+                if (cpf.length() > 11) {
+                    cpf = cpf.substring(0, 11); // limita a 11 dígitos
+                }
+
+                StringBuilder cpfFormatado = new StringBuilder();
+
+                for (int i = 0; i < cpf.length(); i++) {
+                    if (i == 3 || i == 6) {
+                        cpfFormatado.append(".");
+                    } else if (i == 9) {
+                        cpfFormatado.append("-");
+                    }
+                    cpfFormatado.append(cpf.charAt(i));
+                }
+
+                Cpfvendedor.setText(cpfFormatado.toString());
+                Cpfvendedor.setCaretPosition(Cpfvendedor.getText().length()); // mantém o cursor no final
             }
-            cpfFormatado.append(cpf.charAt(i));
-        }
-        
-        Cpfvendedor.setText(cpfFormatado.toString());
-        Cpfvendedor.setCaretPosition(Cpfvendedor.getText().length()); // mantém o cursor no final
-    }
-});
+        });
         Comissaovendedor.addFocusListener(new java.awt.event.FocusAdapter() {
-    @Override
-    public void focusGained(java.awt.event.FocusEvent evt) {
-        if (Comissaovendedor.getText().trim().isEmpty()) {
-            Comissaovendedor.setText("R$ ");
-        }
-        Comissaovendedor.setCaretPosition(Comissaovendedor.getText().length());
-    }
-    
-    @Override
-    public void focusLost(java.awt.event.FocusEvent evt) {
-        restaurarComissao();
-    }
-});
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (Comissaovendedor.getText().trim().isEmpty()) {
+                    Comissaovendedor.setText("R$ ");
+                }
+                Comissaovendedor.setCaretPosition(Comissaovendedor.getText().length());
+            }
 
-Comissaovendedor.addKeyListener(new java.awt.event.KeyAdapter() {
-    @Override
-    public void keyTyped(java.awt.event.KeyEvent evt) {
-        char c = evt.getKeyChar();
-        if (!Character.isDigit(c) && c != java.awt.event.KeyEvent.VK_BACK_SPACE) {
-            evt.consume();
-        }
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                restaurarComissao();
+            }
+        });
+
+        Comissaovendedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                char c = evt.getKeyChar();
+                if (!Character.isDigit(c) && c != java.awt.event.KeyEvent.VK_BACK_SPACE) {
+                    evt.consume();
+                }
+            }
+
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                String textoAtual = Comissaovendedor.getText();
+                String corrigido = corrigirMascaraComissao(textoAtual);
+                if (!corrigido.equals("R$ ") && !textoAtual.equals(corrigido)) {
+                    int dotAntigo = corrigido.indexOf('.');
+                    Comissaovendedor.setText(corrigido);
+                    Comissaovendedor.setCaretPosition(Math.min(dotAntigo, corrigido.length()));
+                }
+            }
+        });
+
     }
-    
-    @Override
-    public void keyReleased(java.awt.event.KeyEvent evt) {
-        String textoAtual = Comissaovendedor.getText();
-        String corrigido = corrigirMascaraComissao(textoAtual);
-        if (!corrigido.equals("R$ ") && !textoAtual.equals(corrigido)) {
-            int dotAntigo = corrigido.indexOf('.');
-            Comissaovendedor.setText(corrigido);
-            Comissaovendedor.setCaretPosition(Math.min(dotAntigo, corrigido.length()));
-        }
-    }
-});
-        
-    }
+
     private String corrigirMascaraComissao(String texto) {
-    String semPrefixo = texto.replace("R$ ", "");
-    int dotIndex = semPrefixo.indexOf('.');
-    String parteInteira;
-    String parteDecimal;
-    
-    if (dotIndex == -1) {
-        parteInteira = semPrefixo.replaceAll("[^0-9]", "");
-        parteDecimal = "00";
-    } else {
-        parteInteira = semPrefixo.substring(0, dotIndex).replaceAll("[^0-9]", "");
-        parteDecimal = semPrefixo.substring(dotIndex + 1).replaceAll("[^0-9]", "");
-        if (parteDecimal.length() > 2) parteDecimal = parteDecimal.substring(0, 2);
-        while (parteDecimal.length() < 2) parteDecimal += "0";
-    }
-    
-    if (parteInteira.isEmpty()) return "R$ ";
-    return "R$ " + parteInteira + "." + parteDecimal;
-}
+        String semPrefixo = texto.replace("R$ ", "");
+        int dotIndex = semPrefixo.indexOf('.');
+        String parteInteira;
+        String parteDecimal;
 
-private void restaurarComissao() {
-    String texto = Comissaovendedor.getText();
-    if (!texto.trim().isEmpty() && !texto.equals("R$ ")) {
-        String corrigido = corrigirMascaraComissao(texto);
-        Comissaovendedor.setText(corrigido);
+        if (dotIndex == -1) {
+            parteInteira = semPrefixo.replaceAll("[^0-9]", "");
+            parteDecimal = "00";
+        } else {
+            parteInteira = semPrefixo.substring(0, dotIndex).replaceAll("[^0-9]", "");
+            parteDecimal = semPrefixo.substring(dotIndex + 1).replaceAll("[^0-9]", "");
+            if (parteDecimal.length() > 2) {
+                parteDecimal = parteDecimal.substring(0, 2);
+            }
+            while (parteDecimal.length() < 2) {
+                parteDecimal += "0";
+            }
+        }
+
+        if (parteInteira.isEmpty()) {
+            return "R$ ";
+        }
+        return "R$ " + parteInteira + "." + parteDecimal;
     }
-}
+
+    private void restaurarComissao() {
+        String texto = Comissaovendedor.getText();
+        if (!texto.trim().isEmpty() && !texto.equals("R$ ")) {
+            String corrigido = corrigirMascaraComissao(texto);
+            Comissaovendedor.setText(corrigido);
+        }
+        tabela_vendedor.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Nome", "CPF", "Comissão"}
+        ));
+        
+        
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -126,6 +145,9 @@ private void restaurarComissao() {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         Comissaovendedor = new javax.swing.JTextField();
+        scrollPane1 = new java.awt.ScrollPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tabela_vendedor = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Vendedor");
@@ -164,58 +186,98 @@ private void restaurarComissao() {
 
         Comissaovendedor.addActionListener(this::ComissaovendedorActionPerformed);
 
+        jScrollPane2.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                jScrollPane2ComponentShown(evt);
+            }
+        });
+
+        tabela_vendedor.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "NOME", "CPF", "COMISSÃO"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tabela_vendedor);
+        if (tabela_vendedor.getColumnModel().getColumnCount() > 0) {
+            tabela_vendedor.getColumnModel().getColumn(0).setResizable(false);
+            tabela_vendedor.getColumnModel().getColumn(1).setResizable(false);
+        }
+
+        scrollPane1.add(jScrollPane2);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addGap(18, 18, 18)
+                        .addGap(88, 88, 88)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(Cpfvendedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
-                            .addComponent(Nomevendedor, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Comissaovendedor)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(Cpfvendedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
+                                    .addComponent(Nomevendedor, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(Comissaovendedor)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
+                                .addComponent(jButton2)
+                                .addGap(309, 309, 309)))
+                        .addGap(37, 37, 37)
+                        .addComponent(scrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(52, 52, 52)
-                        .addComponent(jButton2)
-                        .addGap(281, 281, 281)
-                        .addComponent(jButton3)))
-                .addContainerGap(149, Short.MAX_VALUE))
+                        .addGap(410, 410, 410)
+                        .addComponent(jLabel1)))
+                .addContainerGap(106, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(241, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(204, 204, 204))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton3)
+                .addGap(18, 18, 18))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(64, 64, 64)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(Nomevendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(56, 56, 56)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(Cpfvendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(48, 48, 48)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Comissaovendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addContainerGap(71, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(Nomevendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(56, 56, 56)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(Cpfvendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(48, 48, 48)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Comissaovendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addGap(34, 34, 34)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(jButton2)))
+                    .addComponent(scrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3)
+                .addGap(26, 26, 26))
         );
 
         pack();
@@ -229,78 +291,60 @@ private void restaurarComissao() {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        this.setVisible(false);
+
         new MenuPrincipal().setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void NomevendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NomevendedorActionPerformed
-        String nome= Nomevendedor.getText();
+        String nome = Nomevendedor.getText();
     }//GEN-LAST:event_NomevendedorActionPerformed
 
     private void CpfvendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CpfvendedorActionPerformed
-        String cpf_vendedor= Cpfvendedor.getText();
+        String cpf_vendedor = Cpfvendedor.getText();
         int cpf = Integer.parseInt(cpf_vendedor);
     }//GEN-LAST:event_CpfvendedorActionPerformed
 
     private void ComissaovendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComissaovendedorActionPerformed
-        String comissao_vendedor= Comissaovendedor.getText();
+        String comissao_vendedor = Comissaovendedor.getText();
         float comissao = Float.parseFloat(comissao_vendedor);
-        
+
     }//GEN-LAST:event_ComissaovendedorActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         restaurarComissao();
-        try {
-        // PASSO 1: Capturar os textos brutos das caixas de texto (Use os nomes das suas variáveis)
-        String nome = Nomevendedor.getText();
-        String cpf_vendedor= Cpfvendedor.getText();
-        String comissao_vendedor= Comissaovendedor.getText(); // Se houver salário/float
-        
-        // PASSO 2: Validar se o usuário deixou o campo de nome em branco
-        if (nome.trim().isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, digite um nome válido.");
-            return; // Interrompe a execução para não criar objeto com nome vazio
+        if (Nomevendedor.getText().isEmpty()
+                || Cpfvendedor.getText().isEmpty()
+                || Comissaovendedor.getText().isEmpty()) 
+            ///tratamento de erros
+        {
+            JOptionPane.showMessageDialog(null, "Digite todos os campos!!");
+        } else {
+            String nome, cpf;
+            float comissao;
+            nome = Nomevendedor.getText();
+            cpf = Cpfvendedor.getText();
+            comissao = Float.parseFloat(Comissaovendedor.getText());
+
+            DefaultTableModel modelo = (DefaultTableModel) tabela_vendedor.getModel();
+
+            modelo.addRow(new Object[]{nome, cpf, comissao});
+
+            Nomevendedor.setText("");
+            Cpfvendedor.setText("");
+            Comissaovendedor.setText("");
         }
-        
-        
-        
-        else if(Cpfvendedor.getText().trim().isEmpty() && Comissaovendedor.getText().trim().isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos.");
-            return; // Interrompe a execução para não criar objeto com cpf vazio
-        }
-        
-        else if(Cpfvendedor.getText().trim().isEmpty() || Comissaovendedor.getText().trim().isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos.");
-            return; // Interrompe a execução para não criar objeto com cpf vazio
-        }
-        
-        else{
-            javax.swing.JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!!!\n    Bem-Vindo " + nome);
-            // PASSO 3: Substituir vírgula por ponto para não quebrar o Float
-            comissao_vendedor = comissao_vendedor.replace(",", ".");
-        
-        // PASSO 4: Fazer as conversões (Parsing) de String para os tipos corretos
-        int cpf = Integer.parseInt(cpf_vendedor);
-        float comissao = Float.parseFloat(comissao_vendedor);
-        
-        // PASSO 5: Criar o objeto da sua classe comum
-        // (Ajuste a ordem dos parâmetros de acordo com o construtor da sua classe Usuario)
-        Vendedor novo_vendedor= new Vendedor(nome, cpf, comissao);
-        
-        }
-    } catch (NumberFormatException e) {
-        
-        
-        
-    }
-        Nomevendedor.setText("");
-        Cpfvendedor.setText("");
-        Comissaovendedor.setText("");        
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void NomevendedorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NomevendedorKeyTyped
 
     }//GEN-LAST:event_NomevendedorKeyTyped
+
+    private void jScrollPane2ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jScrollPane2ComponentShown
+
+    }//GEN-LAST:event_jScrollPane2ComponentShown
 
     /**
      * @param args the command line arguments
@@ -324,12 +368,12 @@ private void restaurarComissao() {
         //</editor-fold>
 
         /* Create and display the form */
-        
     }
-    public void TelaInclurVendedor(){
+
+    public void TelaInclurVendedor() {
         java.awt.EventQueue.invokeLater(() -> new TelaInclurVendedor().setVisible(true));
     }
-        
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField Comissaovendedor;
     private javax.swing.JTextField Cpfvendedor;
@@ -341,5 +385,8 @@ private void restaurarComissao() {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane2;
+    private java.awt.ScrollPane scrollPane1;
+    private javax.swing.JTable tabela_vendedor;
     // End of variables declaration//GEN-END:variables
 }
