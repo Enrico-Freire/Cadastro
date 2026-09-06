@@ -15,7 +15,8 @@ import javax.swing.*;
 public class TelaIncluirProduto extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaIncluirProduto.class.getName());
-
+    private static TelaIncluirProduto instancia2;
+    
     /**
      * Creates new form TelaIncluirProduto
      */
@@ -161,6 +162,15 @@ public class TelaIncluirProduto extends javax.swing.JFrame {
             return "R$ ";
         }
         return "R$ " + parteInteira + "." + parteDecimal;
+    }
+    
+    public static TelaIncluirProduto getInstancia2()
+    {
+        if(instancia2 == null)
+        {
+            instancia2 = new TelaIncluirProduto();
+        }
+        return instancia2;
     }
 
     // ===== FIM DOS MÉTODOS AUXILIARES =====

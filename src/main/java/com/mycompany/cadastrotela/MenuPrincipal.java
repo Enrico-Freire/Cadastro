@@ -4,12 +4,14 @@
  */
 package com.mycompany.cadastrotela;
 
+import com.mycompany.cadastrotela.TelaInclurVendedor;
+
 /**
  *
  * @author IFSP
  */
 public class MenuPrincipal extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MenuPrincipal.class.getName());
 
     /**
@@ -170,19 +172,19 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_formPropertyChange
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        this.setVisible(false);
         new TelaIncluirProduto().setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        TelaInclurVendedor.getInstancia().setVisible(true);
         this.setVisible(false);
-        new TelaInclurVendedor().setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         this.setVisible(true);
         new Popup().setVisible(true);
-        
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**

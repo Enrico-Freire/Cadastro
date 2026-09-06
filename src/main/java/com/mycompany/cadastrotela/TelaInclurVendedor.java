@@ -16,11 +16,12 @@ import javax.swing.*;
 public class TelaInclurVendedor extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaInclurVendedor.class.getName());
-
+    private static TelaInclurVendedor instancia;
+    
     /**
      * Creates new form TelaInclurVendedor
      */
-    public TelaInclurVendedor() {
+    private TelaInclurVendedor() {
         initComponents();
 
         Cpfvendedor.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -118,6 +119,15 @@ public class TelaInclurVendedor extends javax.swing.JFrame {
             Comissaovendedor.setText(corrigido);
         }
 
+    }
+    
+    public static TelaInclurVendedor getInstancia()
+    {
+        if(instancia == null)
+        {
+            instancia = new TelaInclurVendedor();
+        }
+        return instancia;
     }
 
     /**
