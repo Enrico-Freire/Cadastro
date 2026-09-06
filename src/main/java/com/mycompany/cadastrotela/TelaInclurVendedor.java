@@ -117,12 +117,6 @@ public class TelaInclurVendedor extends javax.swing.JFrame {
             String corrigido = corrigirMascaraComissao(texto);
             Comissaovendedor.setText(corrigido);
         }
-        tabela_vendedor.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{},
-                new String[]{"Nome", "CPF", "Comissão"}
-        ));
-        
-        
 
     }
 
@@ -145,7 +139,7 @@ public class TelaInclurVendedor extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         Comissaovendedor = new javax.swing.JTextField();
-        scrollPane1 = new java.awt.ScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabela_vendedor = new javax.swing.JTable();
 
@@ -208,13 +202,20 @@ public class TelaInclurVendedor extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tabela_vendedor.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                tabela_vendedorComponentAdded(evt);
+            }
+        });
         jScrollPane2.setViewportView(tabela_vendedor);
         if (tabela_vendedor.getColumnModel().getColumnCount() > 0) {
             tabela_vendedor.getColumnModel().getColumn(0).setResizable(false);
             tabela_vendedor.getColumnModel().getColumn(1).setResizable(false);
+            tabela_vendedor.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        scrollPane1.add(jScrollPane2);
+        jScrollPane1.setViewportView(jScrollPane2);
+        jScrollPane2.getAccessibleContext().setAccessibleParent(null);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -223,41 +224,42 @@ public class TelaInclurVendedor extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(88, 88, 88)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
-                                .addGap(18, 18, 18)
+                                .addGap(88, 88, 88)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(Cpfvendedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
-                                    .addComponent(Nomevendedor, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(Comissaovendedor)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel2)
+                                            .addComponent(jLabel3))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(Cpfvendedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
+                                            .addComponent(Nomevendedor, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(Comissaovendedor)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jButton1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
+                                        .addComponent(jButton2)
+                                        .addGap(309, 309, 309)))
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 521, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
-                                .addComponent(jButton2)
-                                .addGap(309, 309, 309)))
-                        .addGap(37, 37, 37)
-                        .addComponent(scrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(410, 410, 410)
-                        .addComponent(jLabel1)))
-                .addContainerGap(106, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton3)
-                .addGap(18, 18, 18))
+                                .addGap(410, 410, 410)
+                                .addComponent(jLabel1)))
+                        .addGap(0, 118, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton3)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addGap(0, 57, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -273,11 +275,14 @@ public class TelaInclurVendedor extends javax.swing.JFrame {
                         .addGap(34, 34, 34)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1)
-                            .addComponent(jButton2)))
-                    .addComponent(scrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton2))))
+                .addGap(5, 5, 5)
                 .addComponent(jButton3)
-                .addGap(26, 26, 26))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -313,22 +318,23 @@ public class TelaInclurVendedor extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         restaurarComissao();
-        if (Nomevendedor.getText().isEmpty()
-                || Cpfvendedor.getText().isEmpty()
-                || Comissaovendedor.getText().isEmpty()) 
+        if (Nomevendedor.getText().isEmpty() || Cpfvendedor.getText().isEmpty() || Comissaovendedor.getText().isEmpty()) 
             ///tratamento de erros
         {
-            JOptionPane.showMessageDialog(null, "Digite todos os campos!!");
+            JOptionPane.showMessageDialog(null, "Digite todos os campos!!!");
         } else {
+            
             String nome, cpf;
             float comissao;
             nome = Nomevendedor.getText();
             cpf = Cpfvendedor.getText();
-            comissao = Float.parseFloat(Comissaovendedor.getText());
+            String comissaoTexto = Comissaovendedor.getText().replace("R$ ", "").trim();
+            comissao = Float.parseFloat(comissaoTexto);
 
             DefaultTableModel modelo = (DefaultTableModel) tabela_vendedor.getModel();
 
             modelo.addRow(new Object[]{nome, cpf, comissao});
+            JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!!!\nBem vindo " + Nomevendedor.getText() + "!!!");
 
             Nomevendedor.setText("");
             Cpfvendedor.setText("");
@@ -345,6 +351,10 @@ public class TelaInclurVendedor extends javax.swing.JFrame {
     private void jScrollPane2ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jScrollPane2ComponentShown
 
     }//GEN-LAST:event_jScrollPane2ComponentShown
+
+    private void tabela_vendedorComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tabela_vendedorComponentAdded
+
+    }//GEN-LAST:event_tabela_vendedorComponentAdded
 
     /**
      * @param args the command line arguments
@@ -385,8 +395,8 @@ public class TelaInclurVendedor extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private java.awt.ScrollPane scrollPane1;
     private javax.swing.JTable tabela_vendedor;
     // End of variables declaration//GEN-END:variables
 }
